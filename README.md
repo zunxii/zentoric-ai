@@ -1,5 +1,5 @@
 Zentoric MVP: AI Model Training Platform
-MVP Overview for Resume
+MVP Overview for
 Project: Zentoric AI Platform
 *A no-code solution for customizing foundation AI models without ML expertise*
 Key Features Implemented:
