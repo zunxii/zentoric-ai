@@ -42,7 +42,6 @@ export default function DashboardPage() {
           <div className="container mx-auto px-6 py-4">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold text-white">Zentoric</h1>
                 <span className="text-xs bg-violet-900/30 text-violet-300 px-2 py-0.5 rounded-full">Dashboard</span>
               </div>
               

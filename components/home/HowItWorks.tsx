@@ -1,91 +1,358 @@
 'use client'
 
-import { ArrowRight, Check, ArrowDownRight, ChevronRight } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { ArrowRight, Check, ArrowDownRight, ChevronRight, Zap, Upload, Settings, Rocket, Code, MousePointer, Play, Pause, RotateCcw } from 'lucide-react';
 
 interface Step {
   number: string;
   title: string;
   description: string;
+  icon: React.ReactNode;
+  color: string;
+  gradient: string;
 }
 
-interface HowItWorksProps {}
+const HowItWorks = () => {
+  const [activeStep, setActiveStep] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [progress, setProgress] = useState(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-const HowItWorks: React.FC<HowItWorksProps> = () => {
   const steps: Step[] = [
     {
       number: "01",
       title: "Select Your Model",
-      description: "Choose from our curated selection of foundation models optimized for different use cases."
+      description: "Choose from our curated selection of foundation models optimized for different use cases.",
+      icon: <MousePointer className="w-6 h-6" />,
+      color: "violet",
+      gradient: "from-violet-500 to-purple-600"
     },
     {
-      number: "02",
+      number: "02", 
       title: "Upload Your Data",
-      description: "Simply upload your CSV or text files. Our system handles the preprocessing and validation."
+      description: "Simply upload your CSV or text files. Our system handles the preprocessing and validation.",
+      icon: <Upload className="w-6 h-6" />,
+      color: "fuchsia",
+      gradient: "from-fuchsia-500 to-pink-600"
     },
     {
       number: "03",
       title: "Configure Training",
-      description: "Set your parameters with our intuitive interface. No machine learning expertise required."
+      description: "Set your parameters with our intuitive interface. No machine learning expertise required.",
+      icon: <Settings className="w-6 h-6" />,
+      color: "blue",
+      gradient: "from-blue-500 to-indigo-600"
     },
     {
       number: "04",
       title: "Launch & Monitor",
-      description: "Start training with one click and track progress in real-time on your dashboard."
+      description: "Start training with one click and track progress in real-time on your dashboard.",
+      icon: <Rocket className="w-6 h-6" />,
+      color: "emerald",
+      gradient: "from-emerald-500 to-teal-600"
     },
     {
       number: "05",
       title: "Deploy & Integrate",
-      description: "Get API keys for your trained model and integrate it into your applications."
+      description: "Get API keys for your trained model and integrate it into your applications.",
+      icon: <Code className="w-6 h-6" />,
+      color: "orange",
+      gradient: "from-orange-500 to-red-600"
     }
   ];
 
+  const getColorValue = (color: string, variant: 'primary' | 'secondary' = 'primary') => {
+    const colors = {
+      violet: {
+        primary: 'rgb(147 51 234)',
+        secondary: 'rgb(192 132 252)'
+      },
+      fuchsia: {
+        primary: 'rgb(217 70 239)',
+        secondary: 'rgb(244 114 182)'
+      },
+      blue: {
+        primary: 'rgb(59 130 246)',
+        secondary: 'rgb(147 197 253)'
+      },
+      emerald: {
+        primary: 'rgb(16 185 129)',
+        secondary: 'rgb(110 231 183)'
+      },
+      orange: {
+        primary: 'rgb(249 115 22)',
+        secondary: 'rgb(253 186 116)'
+      }
+    };
+    return colors[color as keyof typeof colors]?.[variant] || colors.violet[variant];
+  };
+
+  useEffect(() => {
+    if (isPlaying) {
+      intervalRef.current = setInterval(() => {
+        setProgress(prev => {
+          const newProgress = prev + 2;
+          if (newProgress >= 100) {
+            // Use setTimeout to ensure smooth transition
+            setTimeout(() => {
+              setActiveStep(current => (current + 1) % steps.length);
+              setProgress(0);
+            }, 50);
+            return 100;
+          }
+          return newProgress;
+        });
+      }, 80);
+    } else {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [isPlaying, steps.length]);
+
+  const handleStepClick = (index: number) => {
+    setActiveStep(index);
+    setProgress(0);
+  };
+
+  const togglePlayback = () => {
+    setIsPlaying(!isPlaying);
+  };
+
+  const resetAnimation = () => {
+    setActiveStep(0);
+    setProgress(0);
+    setIsPlaying(true);
+  };
+
   return (
-    <section id="how-it-works" className="py-24 md:py-32 bg-zinc-950 relative overflow-hidden">
+    <section id="how-it-works" className="py-14 md:py-20 bg-zinc-950 relative overflow-hidden">
       {/* Background elements */}
       <div className="absolute inset-0">
-        {/* Subtle hexagon pattern */}
-        <div className="absolute inset-0 opacity-5" style={{ 
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='%239333EA' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E")`,
-          backgroundSize: '60px 60px'
-        }}></div>
+        {/* Dynamic background pattern */}
+        <div 
+          className="absolute inset-0 opacity-5 transition-transform duration-1000 ease-in-out" 
+          style={{ 
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='%239333EA' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+            backgroundSize: '60px 60px',
+            transform: `translateX(${activeStep * -10}px) translateY(${activeStep * -5}px)`
+          }}
+        />
         
-        {/* Accent glows */}
-        <div className="absolute bottom-0 right-1/4 w-1/2 h-1/3 bg-violet-900/10 blur-[150px] rounded-full"></div>
-        <div className="absolute top-1/4 left-1/4 w-1/3 h-1/3 bg-fuchsia-900/10 blur-[150px] rounded-full"></div>
+        {/* Animated accent glows */}
+        <div 
+          className="absolute w-1/2 h-1/3 blur-3xl rounded-full transition-all duration-1000 ease-in-out"
+          style={{
+            background: `radial-gradient(circle, ${getColorValue(steps[activeStep].color)} / 0.1, transparent)`,
+            bottom: '0',
+            right: `${25 + activeStep * 10}%`,
+          }}
+        />
+        <div 
+          className="absolute w-1/3 h-1/3 blur-3xl rounded-full transition-all duration-1000 ease-in-out"
+          style={{
+            background: `radial-gradient(circle, ${getColorValue(steps[activeStep].color, 'secondary')} / 0.1, transparent)`,
+            top: '25%',
+            left: `${25 + activeStep * 5}%`,
+          }}
+        />
       </div>
       
       <div className="container mx-auto px-6 md:px-8 relative z-10">
-        <div className="text-center max-w-3xl mx-auto mb-20">
+        <div className="text-center max-w-3xl mx-auto mb-10">
           <div className="inline-flex items-center space-x-2 bg-zinc-900/80 backdrop-blur-sm border border-zinc-800 rounded-full px-4 py-1.5 text-sm mb-8">
-            <span className="text-violet-300 font-medium">The Process</span>
+            <span className="text-violet-300 font-medium">The Journey</span>
+            <Zap className="w-4 h-4 text-violet-400" />
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">How Zentoric Works</h2>
-          <p className="text-lg text-zinc-400 leading-relaxed">Train and deploy custom AI models in minutes, not weeks.</p>
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">AI Model Creation Journey</h2>
+          <p className="text-lg text-zinc-400 leading-relaxed">Experience the future of AI development with our interactive workflow.</p>
         </div>
 
-        <div className="relative mt-20">
-          {/* Progress line */}
-          <div className="hidden lg:block absolute top-24 left-12 right-12 h-0.5 bg-gradient-to-r from-transparent via-violet-500/30 to-transparent"></div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-10">
-            {steps.map((step, index) => (
-              <div key={index} className="flex flex-col items-center text-center relative group">
-                <div className="w-20 h-20 rounded-2xl bg-zinc-900 border border-zinc-800 group-hover:border-violet-600/40 flex items-center justify-center text-violet-400 font-bold mb-8 z-10 shadow-lg shadow-violet-900/10 group-hover:shadow-violet-900/20 transition-all duration-300">
-                  <span className="text-2xl font-mono">{step.number}</span>
+        {/* Interactive Controls */}
+        <div className="flex justify-center items-center space-x-4 mb-32">
+          <button
+            onClick={togglePlayback}
+            className="flex items-center space-x-2 bg-violet-900/30 hover:bg-violet-900/50 border border-violet-800/40 rounded-lg px-4 py-2 text-violet-300 hover:text-violet-200 transition-all duration-200"
+          >
+            {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+            <span className="text-sm">{isPlaying ? 'Pause' : 'Play'}</span>
+          </button>
+          <button
+            onClick={resetAnimation}
+            className="flex items-center space-x-2 bg-zinc-900/50 hover:bg-zinc-900/70 border border-zinc-800 rounded-lg px-4 py-2 text-zinc-400 hover:text-zinc-300 transition-all duration-200"
+          >
+            <RotateCcw className="w-4 h-4" />
+            <span className="text-sm">Reset</span>
+          </button>
+        </div>
+
+        {/* Main Interactive Process Display - Landscape Oriented */}
+        <div className="relative max-w-6xl mx-auto">
+          {/* Central Hub - Smaller size */}
+          <div className="flex justify-center mb-8">
+            <div className="absolute top-35">
+              <div 
+                className="w-24 h-24 rounded-full border-4 bg-zinc-900 flex items-center justify-center relative overflow-hidden shadow-2xl transition-all duration-500"
+                style={{
+                  borderColor: getColorValue(steps[activeStep].color),
+                  boxShadow: `0 0 30px ${getColorValue(steps[activeStep].color)} / 0.3`
+                }}
+              >
+                {/* Progress ring */}
+                <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 96 96">
+                  <circle
+                    cx="48"
+                    cy="48"
+                    r="42"
+                    fill="none"
+                    stroke="rgb(39 39 42)"
+                    strokeWidth="6"
+                  />
+                  <circle
+                    cx="48"
+                    cy="48"
+                    r="42"
+                    fill="none"
+                    stroke={getColorValue(steps[activeStep].color)}
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                    strokeDasharray={`${2 * Math.PI * 42}`}
+                    strokeDashoffset={`${2 * Math.PI * 42 * (1 - progress / 100)}`}
+                    className="transition-all duration-300 ease-out"
+                  />
+                </svg>
+                
+                {/* Icon */}
+                <div className="relative z-10 text-white transform transition-all duration-500 scale-110">
+                  {steps[activeStep].icon}
                 </div>
-                {index < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-10 left-[60%] w-12 h-12 text-zinc-700">
-                    <ArrowRight className="w-6 h-6" />
-                  </div>
-                )}
-                <h3 className="text-xl font-semibold text-white mb-3">{step.title}</h3>
-                <p className="text-zinc-400">{step.description}</p>
               </div>
+              
+              {/* Step number floating above */}
+              <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
+                <div className="bg-zinc-900 border border-zinc-700 rounded-lg px-3 w-full py-1 text-sm font-mono text-zinc-300 flex items-center justify-center gap-1">
+                  <span>Step</span> <span>{steps[activeStep].number}</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Step Cards arranged in a more landscape-friendly ellipse */}
+          <div className="relative w-full h-72 md:h-80">
+            {steps.map((step, index) => {
+              // Create a more horizontal ellipse layout
+              const angle = (index * 72) - 90; // Still 72 degrees between steps
+              const radiusX = 480; // Horizontal radius - wider
+              const radiusY = 200; // Vertical radius - smaller for landscape
+              const x = Math.cos(angle * Math.PI / 180) * radiusX;
+              const y = Math.sin(angle * Math.PI / 180) * radiusY;
+              const isActive = index === activeStep;
+                
+              return (
+                <div
+                  key={index}
+                  className="absolute top-1/2 left-1/2 cursor-pointer group"
+                  style={{
+                    transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
+                    transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)'
+                  }}
+                  onClick={() => handleStepClick(index)}
+                >
+                  <div 
+                    className={`
+                      w-56 p-5 rounded-xl border backdrop-blur-sm transition-all duration-500 transform
+                      ${isActive 
+                        ? 'bg-zinc-900/90 border-zinc-700 scale-105 shadow-2xl' 
+                        : 'bg-zinc-900/50 border-zinc-800 hover:bg-zinc-900/70 hover:border-zinc-700 hover:scale-102'
+                      }
+                    `}
+                    style={{
+                      boxShadow: isActive ? `0 15px 30px ${getColorValue(step.color)} / 0.2` : undefined
+                    }}
+                  >
+                    {/* Connection line to center */}
+                            <div className={`absolute top-1/2 left-1/2 origin-left transition-all duration-500 ${
+                                isActive ? 'opacity-60' : 'opacity-20'
+                              }`}
+                              style={{
+                                height: '2px',
+                                background: `linear-gradient(90deg, transparent, ${getColorValue(step.color)})`,
+                                width: `${Math.sqrt(x * x + y * y) - 80}px`,
+                                transform: `rotate(${Math.atan2(y, x) * 180 / Math.PI + 180}deg) translateY(-50%)`,
+                                transformOrigin: '0 50%'
+                              }}
+                            />
+                    <div className="flex items-center space-x-3 mb-3">
+                      <div 
+                        className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                          isActive ? 'shadow-lg' : ''
+                        }`}
+                        style={{
+                          background: isActive 
+                            ? `linear-gradient(135deg, ${getColorValue(step.color)}, ${getColorValue(step.color, 'secondary')})` 
+                            : 'rgb(39 39 42)'
+                        }}
+                      >
+                        <div className={`transition-colors duration-300 ${isActive ? 'text-white' : 'text-zinc-500'}`}>
+                          <div className="w-5 h-5">{step.icon}</div>
+                        </div>
+                      </div>
+                      <span className={`font-mono text-sm transition-colors duration-300 ${
+                        isActive ? 'text-violet-400' : 'text-zinc-500'
+                      }`}>
+                        {step.number}
+                      </span>
+                    </div>
+                    
+                    <h3 className={`font-semibold mb-2 text-sm transition-colors duration-300 ${
+                      isActive ? 'text-white' : 'text-zinc-300'
+                    }`}>
+                      {step.title}
+                    </h3>
+                    
+                    <p className={`text-xs leading-relaxed transition-colors duration-300 ${
+                      isActive ? 'text-zinc-300' : 'text-zinc-500'
+                    }`}>
+                      {step.description}
+                    </p>
+                    
+                    {/* Active indicator */}
+                    {isActive && (
+                      <div className="absolute -top-2 -right-2">
+                        <div className="w-4 h-4 rounded-full bg-gradient-to-r from-violet-500 to-purple-600 animate-pulse"></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Step indicator dots */}
+          <div className="flex justify-center space-x-3 mt-8">
+            {steps.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => handleStepClick(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  index === activeStep 
+                    ? 'bg-violet-500 scale-125 shadow-lg shadow-violet-500/50' 
+                    : 'bg-zinc-700 hover:bg-zinc-600'
+                }`}
+              />
             ))}
           </div>
         </div>
         
-        <div className="mt-28 bg-zinc-900/30 rounded-2xl overflow-hidden border border-zinc-800 shadow-xl shadow-violet-900/5 backdrop-blur-sm">
+        {/* Bottom section */}
+        <div className="mt-42 mx-auto max-w-6xl bg-zinc-900/30 rounded-2xl overflow-hidden border border-zinc-800 shadow-xl shadow-violet-900/5 backdrop-blur-sm">
           <div className="grid grid-cols-1 lg:grid-cols-2">
             <div className="p-8 md:p-12">
               <div className="inline-flex items-center space-x-2 bg-zinc-800/70 backdrop-blur-sm border border-zinc-700 rounded-full px-3 py-1 text-xs mb-6">
@@ -151,7 +418,7 @@ const HowItWorks: React.FC<HowItWorksProps> = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
 export default HowItWorks;

@@ -5,6 +5,7 @@ import { ArrowRight } from 'lucide-react'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import Container from '@/components/ui/Container'
 import GradientButton from '@/components/ui/GradientButton'
+import Image from 'next/image'
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false)
@@ -28,13 +29,13 @@ const Navbar = () => {
       <Container>
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <div className="relative h-9 w-9 mr-2">
-              <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-blue-600 to-emerald-500 rounded-lg animate-gradient-x" />
-              <div className="absolute inset-[2px] bg-white dark:bg-zinc-950 rounded-lg flex items-center justify-center">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-blue-600 to-emerald-500 font-bold text-lg">Z</span>
-              </div>
-            </div>
-            <span className="font-extrabold text-xl text-zinc-900 dark:text-white">Zentoric</span>
+            <Image
+              src="/logo.svg" 
+              alt="Zentoric Logo"
+            width={200}
+        height={60}
+        priority
+            />
           </div>
           
           {/* Desktop Menu */}
@@ -49,7 +50,7 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             {/* <ThemeToggle /> */}
             <a href="#" className="hidden md:inline-flex text-zinc-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition">Sign In</a>
-            <GradientButton href="#" size="md">
+            <GradientButton href="/dashboard" size="md">
               Get Started
             </GradientButton>
             

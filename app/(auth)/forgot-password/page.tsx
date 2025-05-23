@@ -1,11 +1,16 @@
-import React from 'react'
+import { Metadata } from 'next';
+import AuthLayout from '@/components/auth/AuthLayout';
+import AuthForm from '@/components/auth/AuthForm';
 
-const page = () => {
+export const metadata: Metadata = {
+  title: 'Reset Password | Zentoric',
+  description: 'Reset your Zentoric account password.',
+};
+
+export default function ForgotPasswordPage() {
   return (
-    <div>
-      forgot password
-    </div>
-  )
+    <AuthLayout>
+      <AuthForm type="forgot-password" />
+    </AuthLayout>
+  );
 }
-
-export default page

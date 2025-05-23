@@ -63,10 +63,6 @@ app/
 │   │   │   ├── page.tsx          # Model details
 │   │   │   ├── edit/             # Edit model
 │   │   │   │   └── page.tsx
-│   │   │   ├── metrics/          # Model metrics & performance
-│   │   │   │   └── page.tsx
-│   │   │   └── api-access/       # API management for this model
-│   │   │       └── page.tsx
 │   │   └── create/               # Create new model
 │   │       └── page.tsx
 │   │

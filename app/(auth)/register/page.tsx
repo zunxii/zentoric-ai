@@ -1,11 +1,16 @@
-import React from 'react'
+import { Metadata } from 'next';
+import AuthLayout from '@/components/auth/AuthLayout';
+import AuthForm from '@/components/auth/AuthForm';
 
-const page = () => {
+export const metadata: Metadata = {
+  title: 'Create Account | Zentoric',
+  description: 'Create your Zentoric account and start building AI models without code.',
+};
+
+export default function RegisterPage() {
   return (
-    <div>
-      register
-    </div>
-  )
+    <AuthLayout>
+      <AuthForm type="register" />
+    </AuthLayout>
+  );
 }
-
-export default page

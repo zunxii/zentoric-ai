@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import {
   BarChart2,
@@ -48,12 +49,15 @@ export default function DashboardLayout({
       <div className="relative z-10 flex h-screen">
         {/* Sidebar */}
         <aside className="hidden lg:flex flex-col w-64 border-r border-zinc-800 bg-zinc-950/80 backdrop-blur-sm">
-          <div className="p-6 border-b border-zinc-800">
+          <div className="border-b flex justify-center pt-2 pb-1 border-zinc-800">
             <Link href='/' className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center text-white font-bold">
-                Z
-              </div>
-              <h1 className="text-lg font-bold text-white">Zentoric</h1>
+              <Image
+                            src="/logo.svg" 
+                            alt="Zentoric Logo"
+                          width={180}
+                      height={32}
+                      priority
+                          />
             </Link>
           </div>
           <nav className="flex-1 pt-5 px-3">

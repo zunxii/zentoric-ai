@@ -9,6 +9,7 @@ import Testimonials from '@/components/home/Testimonials';
 import Pricing from '@/components/home/Pricing';
 import FAQ from '@/components/home/FAQ';
 import CTA from '@/components/home/CTA';
+import Community from '@/components/home/Community';
 
 // Main Page Component
 export default function Home() {
@@ -22,6 +23,7 @@ export default function Home() {
       <main>
         <Hero />
         <Features />
+        <Community/>
         <HowItWorks />
         <Testimonials />
         <Pricing />
